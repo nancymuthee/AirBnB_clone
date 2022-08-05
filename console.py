@@ -108,6 +108,20 @@ class HBNBCommand(cmd.Cmd):
             return False
 
         return True
+    
+    def do_destroy(self, inp):
+        """Deletes an instance based on the class name and id (save the
+        change into the JSON file).
+        """
+        args = inp.split()
+        if not self.class_verification(args):
+            return
+        if not self.id_verification(args):
+            return
+        string_key = str(args[0]) + '.' + str(args[1])
+        objects = storage.all()
+        storage.delete(objects[string_key])
+        storage.save()
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
