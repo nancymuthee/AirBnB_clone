@@ -14,6 +14,7 @@ Your code should not be executed when imported
 import cmd
 from models.base_model import BaseModel
 from models.__init__ import storage
+import shlex
 
 
 class HBNBCommand(cmd.Cmd):
@@ -144,6 +145,41 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return False
         print(list_)
+
+    def do_update(self, line):
+        """ Updates an instance based on the class name and id by adding or
+        updating attribute (save the change into the JSON file).
+        """
+        args = shlex.split(line)
+        if not self.class_verification(args):
+            return
+        if not self.id_verification(args):
+            return
+        if not self.attribute_verification(args):
+            return
+        string_key = str(args[0]) + '.' + str(args[1])
+        all_objects = storage.all()
+        my_dict = all_objects[string_key].to_dict()
+        attr_name = args[2]
+        attr_value = args[3]
+        for (key, value) in my_dict.items():
+            if attr_name is key:
+                attr_value = eval('({}){}'.format(type(value), attr_value))
+        setattr(all_objects[string_key], attr_name, attr_value)
+        storage.save()
+
+    @staticmethod
+    def attribute_verification(args):
+        """Verifies attributes.
+        """
+        if len(args) < 3:
+            print("** attribute name missing **")
+            return False
+        if len(args) < 4:
+            print("** value missing **")
+            return False
+        return True
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
