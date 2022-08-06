@@ -31,7 +31,8 @@ class HBNBCommand(cmd.Cmd):
         cmd (_type_): _description_
     """
     prompt = "(hbnb) "
-    classes_list = ["BaseModel", "User", "State", "City", "Amenity", "Place", "Review"]
+    classes_list = ["BaseModel", "User", "State", "City", "Amenity",
+                    "Place", "Review"]
     commands_list = ["create", "show", "all", "destroy", "update", "count"]
 
     def do_quit(self, args):
@@ -197,10 +198,11 @@ class HBNBCommand(cmd.Cmd):
             cls = arg.split('.')
             command = cls[1].split('(')
             args = command[1].split(')')
-            if cls[0] in HBNBCommand.classes_list and command[0] in HBNBCommand.commands_list:
+            if cls[0] in HBNBCommand.classes_list and command[0] \
+                    in HBNBCommand.commands_list:
                 arg = command[0] + ' ' + cls[0] + ' ' + args[0]
         return arg
-    
+
     def do_count(self, class_name):
         """Retrieve the number of instances of a class.
         """
