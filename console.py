@@ -12,6 +12,7 @@ an empty line + ENTER shouldn’t execute anything.
 Your code should not be executed when imported
 """
 import cmd
+import models
 from models.base_model import BaseModel
 from models.__init__ import storage
 import shlex
@@ -23,7 +24,8 @@ class HBNBCommand(cmd.Cmd):
     Args:
         cmd (_type_): _description_
     """
-    prompt = '(hbnb) '
+    prompt = "(hbnb) "
+    classes_list = ["BaseModel", "Model2", "Model2"]
 
     def do_quit(self, args):
         """Quit command to exit the program
@@ -40,19 +42,19 @@ class HBNBCommand(cmd.Cmd):
         """
         pass
 
-    def do_create(self, class_name):
+    def do_create(self, inp):
         """Creates a new instance of BaseModel, saves it (to the JSON
         file) and prints the id.
 
         Args:
             class_name (class): name of current class.
         """
-        classes = ['BaseModel']
-
-        if not class_name:
-            print("** class name missing **")
-        elif class_name not in classes:
-            print("** class doesn't exist **")
+        args = inp.split()
+        if not self.class_verification(args):
+            return
+        inst = eval(str(args[0]) + '()')
+        if not isinstance(inst, BaseModel):
+            return
         else:
             new_model = BaseModel()
             print(new_model.id)
@@ -62,7 +64,7 @@ class HBNBCommand(cmd.Cmd):
         """Prints the string representation of an instance based on the
         class name and id.
         """
-        args = inp.split
+        args = inp.split()
 
         if not self.class_verification(args):
             return
@@ -71,7 +73,7 @@ class HBNBCommand(cmd.Cmd):
             return
 
         string_key = str(args[0]) + '.' + str(args[1])
-        objects = storage.all()
+        objects = models.storage.all()
         print(objects[string_key])
 
     @classmethod
@@ -81,12 +83,12 @@ class HBNBCommand(cmd.Cmd):
         Returns:
             bool: True or false depending on status of class.
         """
-        classes = ['BaseModel']
         if len(args) == 0:
             print("** class name missing **")
             return False
 
-        if args[0] not in classes:
+        if args[0] not in cls.classes_list:
+            print("** class doesn't exist **")
             return False
 
         return True
@@ -120,9 +122,9 @@ class HBNBCommand(cmd.Cmd):
         if not self.id_verification(args):
             return
         string_key = str(args[0]) + '.' + str(args[1])
-        objects = storage.all()
-        storage.delete(objects[string_key])
-        storage.save()
+        objects = models.storage.all()
+        models.storage.delete(objects[string_key])
+        models.storage.save()
 
     def do_all(self, inp):
         """Prints all string representation of all instances based or not
@@ -130,13 +132,12 @@ class HBNBCommand(cmd.Cmd):
         """
         args = inp.split()
         all_objects = storage.all()
-        classes = ['BaseModel']
         list_ = []
         if len(args) == 0:
             # print all classes
             for value in all_objects.values():
                 list_.append(str(value))
-        elif args[0] in classes:
+        elif args[0] in self.classes_list:
             # print just arg[0] class instances
             for (key, value) in all_objects.items():
                 if args[0] in key:
