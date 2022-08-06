@@ -55,3 +55,13 @@ class FileStorage:
             with open(self.__file_path, 'r', encoding="utf-8") as myFile:
                 for key, value in json.load(myFile).items():
                     self.new(BaseModel(**value))
+
+    def delete(self, obj):
+        """Deletes obj from __objects
+        """
+        try:
+            key = obj.__class__.__name__ + '.' + str(obj.id)
+            del self.__objects[key]
+            return True
+        except:
+            return False
