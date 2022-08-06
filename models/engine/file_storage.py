@@ -41,10 +41,10 @@ class FileStorage:
         """
         dictionary = {}
 
-        for key, value in self.__objects.items():
+        for key, value in FileStorage.__objects.items():
             dictionary[key] = value.to_dict()
 
-        with open(self.__file_path, 'w', encoding="utf-8") as myFile:
+        with open(FileStorage.__file_path, 'w', encoding="utf-8") as myFile:
             json.dump(dictionary, myFile)
 
     def reload(self):
@@ -52,12 +52,15 @@ class FileStorage:
         (__file_path) exists ; otherwise, do nothing. If the file doesn’t
         exist, no exception should be raised)
         """
-        dict_ = {'BaseModel': BaseModel, 'User': User}
-
-        if os.path.exists(self.__file_path) is True:
-            with open(self.__file_path, 'r', encoding="utf-8") as myFile:
-                for key, value in json.load(myFile).items():
-                    self.new(dict_[value['__class__']](**value))
+        try:
+            with open(self.__file_path, 'r', encoding='utf-8') as myFile:
+                my_obj_dump = myFile.read()
+        except:
+            return
+        objects = eval(my_obj_dump)
+        for (key, value) in objects.items():
+            objects[key] = eval(key.split('.')[0] + '(**value)')
+        self.__objects = objects
 
     def delete(self, obj):
         """Deletes obj from __objects
