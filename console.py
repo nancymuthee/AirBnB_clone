@@ -32,6 +32,7 @@ class HBNBCommand(cmd.Cmd):
     """
     prompt = "(hbnb) "
     classes_list = ["BaseModel", "User", "State", "City", "Amenity", "Place", "Review"]
+    commands_list = ["create", "show", "all", "destroy", "update", "count"]
 
     def do_quit(self, args):
         """Quit command to exit the program
@@ -186,6 +187,30 @@ class HBNBCommand(cmd.Cmd):
                 return
         setattr(all_objects[string_key], attr_name, attr_value)
         all_objects[string_key].save()
+
+    def precmd(self, arg):
+        """Hook before the command is run.
+        If the self.block_command returns True, the command is not run.
+        Otherwise, it is run.
+        """
+        if '.' in arg and '(' in arg and ')' in arg:
+            cls = arg.split('.')
+            command = cls[1].split('(')
+            args = command[1].split(')')
+            if cls[0] in HBNBCommand.classes_list and command[0] in HBNBCommand.commands_list:
+                arg = command[0] + ' ' + cls[0] + ' ' + args[0]
+        return arg
+    
+    def do_count(self, class_name):
+        """Retrieve the number of instances of a class.
+        """
+        count = 0
+        all_objects = models.storage.all()
+        for key, value in all_objects.items():
+            keys_split = key.split('.')
+            if keys_split[0] == class_name:
+                count += 1
+        print(count)
 
     @staticmethod
     def attribute_verification(args):
