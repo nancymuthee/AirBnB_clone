@@ -55,7 +55,7 @@ class FileStorage:
         try:
             with open(self.__file_path, 'r', encoding='utf-8') as myFile:
                 my_obj_dump = myFile.read()
-        except:
+        except Exception:
             return
         objects = eval(my_obj_dump)
         for (key, value) in objects.items():
@@ -69,5 +69,5 @@ class FileStorage:
             key = obj.__class__.__name__ + '.' + str(obj.id)
             del self.__objects[key]
             return True
-        except:
+        except Exception:
             return False

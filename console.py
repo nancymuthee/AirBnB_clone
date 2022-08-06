@@ -53,7 +53,7 @@ class HBNBCommand(cmd.Cmd):
         args = inp.split()
         if not self.class_verification(args):
             return
-        
+
         inst = eval(str(args[0]) + '()')
         if not isinstance(inst, BaseModel):
             return
@@ -169,13 +169,15 @@ class HBNBCommand(cmd.Cmd):
                     obj_dir = all_objects[string_key].__dir__()
                     if key in obj_dir:
                         val_c_attr = obj_dir[obj_dir.index(key)]
-                        obj = eval('objects[string_key].__class__.' + val_c_attr)
+                        obj = eval('objects[string_key].__class__.' +
+                                   val_c_attr)
                         if type(obj) is list:
                             print('converting list')
-                            attr_value = eval(attr_value, {'__builtins__': None}, {})
+                            attr_value = eval(attr_value,
+                                              {'__builtins__': None}, {})
                         else:
                             attr_value = obj.__class__(attr_value)
-            except:
+            except Exception:
                 return
         setattr(all_objects[string_key], attr_name, attr_value)
         all_objects[string_key].save()
