@@ -4,6 +4,7 @@
 import json
 import os
 from models.base_model import BaseModel
+from models.user import User
 
 
 class FileStorage:
@@ -51,10 +52,12 @@ class FileStorage:
         (__file_path) exists ; otherwise, do nothing. If the file doesn’t
         exist, no exception should be raised)
         """
+        dict_ = {'BaseModel': BaseModel, 'User': User}
+
         if os.path.exists(self.__file_path) is True:
             with open(self.__file_path, 'r', encoding="utf-8") as myFile:
                 for key, value in json.load(myFile).items():
-                    self.new(BaseModel(**value))
+                    self.new(dict_[value['__class__']](**value))
 
     def delete(self, obj):
         """Deletes obj from __objects
