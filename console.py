@@ -15,6 +15,7 @@ import cmd
 import models
 from models.base_model import BaseModel
 from models.__init__ import storage
+from models.user import User
 import shlex
 
 
@@ -25,7 +26,7 @@ class HBNBCommand(cmd.Cmd):
         cmd (_type_): _description_
     """
     prompt = "(hbnb) "
-    classes_list = ["BaseModel", "Model2", "Model2"]
+    classes_list = ["BaseModel", "User", "Model2"]
 
     def do_quit(self, args):
         """Quit command to exit the program
@@ -52,13 +53,12 @@ class HBNBCommand(cmd.Cmd):
         args = inp.split()
         if not self.class_verification(args):
             return
+        
         inst = eval(str(args[0]) + '()')
         if not isinstance(inst, BaseModel):
             return
-        else:
-            new_model = BaseModel()
-            print(new_model.id)
-            new_model.save()
+        inst.save()
+        print(inst.id)
 
     def do_show(self, inp):
         """Prints the string representation of an instance based on the
@@ -104,7 +104,7 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id missing **")
             return False
 
-        objects = storage.all()
+        objects = models.storage.all()
         string_key = str(args[0]) + '.' + str(args[1])
         if string_key not in objects.keys():
             print("** no instance found **")
@@ -131,7 +131,7 @@ class HBNBCommand(cmd.Cmd):
         on the class name.
         """
         args = inp.split()
-        all_objects = storage.all()
+        all_objects = models.storage.all()
         list_ = []
         if len(args) == 0:
             # print all classes
@@ -159,15 +159,26 @@ class HBNBCommand(cmd.Cmd):
         if not self.attribute_verification(args):
             return
         string_key = str(args[0]) + '.' + str(args[1])
-        all_objects = storage.all()
+        all_objects = models.storage.all()
         my_dict = all_objects[string_key].to_dict()
         attr_name = args[2]
         attr_value = args[3]
         for (key, value) in my_dict.items():
-            if attr_name is key:
-                attr_value = eval('({}){}'.format(type(value), attr_value))
+            try:
+                if attr_name in key:
+                    obj_dir = all_objects[string_key].__dir__()
+                    if key in obj_dir:
+                        val_c_attr = obj_dir[obj_dir.index(key)]
+                        obj = eval('objects[string_key].__class__.' + val_c_attr)
+                        if type(obj) is list:
+                            print('converting list')
+                            attr_value = eval(attr_value, {'__builtins__': None}, {})
+                        else:
+                            attr_value = obj.__class__(attr_value)
+            except:
+                return
         setattr(all_objects[string_key], attr_name, attr_value)
-        storage.save()
+        all_objects[string_key].save()
 
     @staticmethod
     def attribute_verification(args):
