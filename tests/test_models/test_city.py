@@ -44,6 +44,7 @@ class TestCity(unittest.TestCase):
         self.assertEqual(type(self.city1.id), str)
         self.assertIsInstance(self.city1.created_at, datetime.datetime)
         self.assertIsInstance(self.city1.updated_at, datetime.datetime)
+        self.assertIsInstance(self.city1.state_id, str)
 
     def test_save(self):
         """Test if save method is working correctly after update.
@@ -52,7 +53,7 @@ class TestCity(unittest.TestCase):
         self.assertNotEqual(self.city1.created_at, self.city1.updated_at)
 
     def test_functions(self):
-        """Test if Amenity moudule is documented.
+        """Test if City moudule is documented.
         """
         self.assertIsNotNone(City.__doc__)
 
@@ -63,6 +64,7 @@ class TestCity(unittest.TestCase):
         self.assertTrue(hasattr(self.city1, 'id'))
         self.assertTrue(hasattr(self.city1, 'created_at'))
         self.assertTrue(hasattr(self.city1, 'updated_at'))
+        self.assertTrue(hasattr(self.city1, 'state_id'))
 
     def test_to_dict(self):
         """Test if to_dict method is working correctly.
