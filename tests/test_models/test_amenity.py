@@ -63,6 +63,18 @@ class TestAmenity(unittest.TestCase):
         self.assertTrue(hasattr(self.amenity1, 'id'))
         self.assertTrue(hasattr(self.amenity1, 'created_at'))
         self.assertTrue(hasattr(self.amenity1, 'updated_at'))
+        
+    def test_to_dict(self):
+        """Test if to_dict method is working correctly.
+        """
+        my_model_json = self.amenity1.to_dict()
+        self.assertEqual(str, type(my_model_json['created_at']))
+        self.assertEqual(my_model_json['created_at'],
+                         self.amenity1.created_at.isoformat())
+        self.assertEqual(datetime.datetime, type(self.amenity1.created_at))
+        self.assertEqual(my_model_json['__class__'],
+                         self.amenity1.__class__.__name__)
+        self.assertEqual(my_model_json['id'], self.amenity1.id)
 
 if __name__ == '__main__':
     unittest.main()
