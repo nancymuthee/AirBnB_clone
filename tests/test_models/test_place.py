@@ -29,7 +29,7 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(str(type(self.place1)), result)
 
     def test_inheritance(self):
-        """Test if Amenity is a subclass and instace of BaseModel.
+        """Test if Place is a subclass and instace of BaseModel.
         """
         self.assertIsInstance(self.place1, Place)
         self.assertEqual(type(self.place1), Place)
