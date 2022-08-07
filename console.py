@@ -158,36 +158,29 @@ class HBNBCommand(cmd.Cmd):
         """ Updates an instance based on the class name and id by adding or
         updating attribute (save the change into the JSON file).
         """
-        args = shlex.split(line)
+        act = ""
+        for argv in line.split(','):
+            act = act + argv
+        args = shlex.split(act)
         if not self.class_verification(args):
             return
         if not self.id_verification(args):
             return
         if not self.attribute_verification(args):
             return
-        string_key = str(args[0]) + '.' + str(args[1])
         all_objects = models.storage.all()
-        my_dict = all_objects[string_key].to_dict()
-        attr_name = args[2]
-        attr_value = args[3]
-        for (key, value) in my_dict.items():
-            try:
-                if attr_name in key:
-                    obj_dir = all_objects[string_key].__dir__()
-                    if key in obj_dir:
-                        val_c_attr = obj_dir[obj_dir.index(key)]
-                        obj = eval('objects[string_key].__class__.' +
-                                   val_c_attr)
-                        if type(obj) is list:
-                            print('converting list')
-                            attr_value = eval(attr_value,
-                                              {'__builtins__': None}, {})
-                        else:
-                            attr_value = obj.__class__(attr_value)
-            except Exception:
+        for key, value in all_objects.items():
+            object_name = value.__class__.__name__
+            object_id = value.id
+            if object_name == args[0] and object_id == args[1].strip('"'):
+                if len(args) == 2:
+                    print("** attribute name missing **")
+                elif len(args) == 3:
+                    print("** value missing **")
+                else:
+                    setattr(value, args[2], args[3])
+                    models.storage.save()
                 return
-        setattr(all_objects[string_key], attr_name, attr_value)
-        all_objects[string_key].save()
 
     def precmd(self, arg):
         """Hook before the command is run.
