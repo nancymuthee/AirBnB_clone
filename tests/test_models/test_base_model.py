@@ -86,5 +86,15 @@ class TestBaseModel(unittest.TestCase):
                          self.BaseModel1.__class__.__name__)
         self.assertEqual(my_model_json['id'], self.BaseModel1.id)
 
+    def test_unique_id(self):
+        """Test if each instance is created with a unique ID.
+        """
+        basemodel2 = self.BaseModel1.__class__()
+        basemodel3 = self.BaseModel1.__class__()
+        basemodel4 = self.BaseModel1.__class__()
+        self.assertNotEqual(self.BaseModel1.id, basemodel2.id)
+        self.assertNotEqual(self.BaseModel1.id, basemodel3.id)
+        self.assertNotEqual(self.BaseModel1.id, basemodel4.id)
+
 if __name__ == '__main__':
     unittest.main()

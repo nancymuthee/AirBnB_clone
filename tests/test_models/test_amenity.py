@@ -56,14 +56,14 @@ class TestAmenity(unittest.TestCase):
         """
         self.assertIsNotNone(Amenity.__doc__)
 
-    def testHasAttributes(self):
+    def test_has_attributes(self):
         """Test if expected attributes exist.
         """
         self.assertTrue(hasattr(self.amenity1, 'name'))
         self.assertTrue(hasattr(self.amenity1, 'id'))
         self.assertTrue(hasattr(self.amenity1, 'created_at'))
         self.assertTrue(hasattr(self.amenity1, 'updated_at'))
-        
+
     def test_to_dict(self):
         """Test if to_dict method is working correctly.
         """
@@ -75,6 +75,16 @@ class TestAmenity(unittest.TestCase):
         self.assertEqual(my_model_json['__class__'],
                          self.amenity1.__class__.__name__)
         self.assertEqual(my_model_json['id'], self.amenity1.id)
+
+    def test_unique_id(self):
+        """Test if each instance is created with a unique ID.
+        """
+        amenity2 = self.amenity1.__class__()
+        amenity3 = self.amenity1.__class__()
+        amenity4 = self.amenity1.__class__()
+        self.assertNotEqual(self.amenity1.id, amenity2.id)
+        self.assertNotEqual(self.amenity1.id, amenity3.id)
+        self.assertNotEqual(self.amenity1.id, amenity4.id)
 
 if __name__ == '__main__':
     unittest.main()
