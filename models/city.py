@@ -12,3 +12,8 @@ class City(BaseModel):
     """
     state_id = ""
     name = ""
+
+    def __init__(self, *args, **kwargs):
+        """Creates new instances of City.
+        """
+        super().__init__(*args, **kwargs)

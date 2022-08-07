@@ -10,3 +10,8 @@ class Amenity(BaseModel):
         name (string): name of amenity.
     """
     name = ""
+
+    def __init__(self, *args, **kwargs):
+        """Creates new instances of Amenity.
+        """
+        super().__init__(*args, **kwargs)
