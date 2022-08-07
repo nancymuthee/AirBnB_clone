@@ -88,5 +88,6 @@ class TestCity(unittest.TestCase):
         self.assertNotEqual(self.city1.id, city3.id)
         self.assertNotEqual(self.city1.id, city4.id)
 
+
 if __name__ == '__main__':
     unittest.main()

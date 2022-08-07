@@ -86,5 +86,6 @@ class TestAmenity(unittest.TestCase):
         self.assertNotEqual(self.amenity1.id, amenity3.id)
         self.assertNotEqual(self.amenity1.id, amenity4.id)
 
+
 if __name__ == '__main__':
     unittest.main()

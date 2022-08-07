@@ -106,5 +106,6 @@ class TestPlace(unittest.TestCase):
         self.assertNotEqual(self.place1.id, place3.id)
         self.assertNotEqual(self.place1.id, place4.id)
 
+
 if __name__ == '__main__':
     unittest.main()
