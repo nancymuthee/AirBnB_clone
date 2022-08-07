@@ -4,6 +4,7 @@ import unittest
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
 from models import storage
+import os
 
 
 class TestFileStorage(unittest.TestCase):
@@ -41,46 +42,21 @@ class TestFileStorage(unittest.TestCase):
     def test_save(self):
         """Test if save method is working correctly.
         """
-        with open(storage.get_filepath(), 'r', encoding='utf-8') as myFile:
-            dump = myFile.read()
-        self.assertNotEqual(len(dump), 0)
-        temp_d = eval(dump)
-        key = self.temp_objs[0].__class__.__name__ + '.'
-        key += str(self.temp_objs[0].id)
-        self.assertNotEqual(len(temp_d[key]), 0)
-        key2 = 'State.412409120491902491209491024'
-        try:
-            self.assertRaises(temp_d[key2], KeyError)
-        except Exception:
-            pass
+        self.file_storage1.save()
+        self.assertEqual(os.path.exists(storage._FileStorage__file_path), True)
+        self.assertEqual(storage.all(), storage._FileStorage__objects)
 
     def test_reload(self):
         """Tests if reload method is working correctly.
         """
+        self.file_storage1.save()
+        self.assertEqual(os.path.exists(storage._FileStorage__file_path), True)
+        dobj = storage.all()
+        FileStorage._FileStorage__objects = {}
+        self.assertNotEqual(dobj, FileStorage._FileStorage__objects)
         storage.reload()
-        obj_d = storage.all()
-        key = self.temp_objs[1].__class__.__name__ + '.'
-        key += str(self.temp_objs[1].id)
-        self.assertNotEqual(obj_d[key], None)
-        self.assertEqual(obj_d[key].id, self.temp_objs[1].id)
-        key2 = 'State.412409120491902491209491024'
-        try:
-            self.assertRaises(obj_d[key2], KeyError)
-        except Exception:
-            pass
-
-    def test_delete_basic(self):
-        """Tests if delete method is working correctly.
-        """
-        self.assertEqual(storage.delete(BaseModel()), True)
-        self.assertEqual(storage.delete(self.temp_objs[2]), True)
-        obj_d = storage.all()
-        key2 = self.temp_objs[2].__class__.__name__ + '.'
-        key2 += str(self.temp_objs[2].id)
-        try:
-            self.assertRaises(obj_d[key2], KeyError)
-        except Exception:
-            pass
+        for key, value in storage.all().items():
+            self.assertEqual(dobj[key].to_dict(), value.to_dict())
 
 
 if __name__ == '__main__':
