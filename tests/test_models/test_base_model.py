@@ -28,6 +28,17 @@ class TestBaseModel(unittest.TestCase):
         result = "<class 'models.base_model.BaseModel'>"
         self.assertEqual(str(type(self.BaseModel1)), result)
 
+    def testBaseModel1(self):
+        """Test attributes value of a BaseModel instance.
+        """
+        self.BaseModel1.save()
+        my_model_json = self.BaseModel1.to_dict()
+
+        self.assertEqual(self.BaseModel1.name, my_model_json['name'])
+        self.assertEqual(self.BaseModel1.my_number, my_model_json['my_number'])
+        self.assertEqual('BaseModel', my_model_json['__class__'])
+        self.assertEqual(self.BaseModel1.id, my_model_json['id'])
+
     def test_types(self):
         """Test if attributes type is correct.
         """
@@ -56,7 +67,7 @@ class TestBaseModel(unittest.TestCase):
         self.assertTrue(hasattr(self.BaseModel1, 'id'))
         self.assertTrue(hasattr(self.BaseModel1, 'created_at'))
         self.assertTrue(hasattr(self.BaseModel1, 'updated_at'))
-        
+
     def test_set_attributes(self):
         """Test set attributes of BaseModel.
         """
