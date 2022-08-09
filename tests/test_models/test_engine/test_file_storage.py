@@ -14,13 +14,15 @@ class TestFileStorage(unittest.TestCase):
     def setUp(cls):
         """Runs for each test case.
         """
-        cls.file_storage1 = FileStorage()
+        cls.base_model1 = BaseModel()
+        cls.filesorage1 = FileStorage()
 
     @classmethod
     def tearDown(cls):
         """Cleans up after each test.
         """
-        del cls.file_storage1
+        del cls.base_model1
+        del cls.filesorage1
 
     def test_class_exists(self):
         """Tests if class exists.
@@ -49,7 +51,7 @@ class TestFileStorage(unittest.TestCase):
     def test_reload(self):
         """Tests if reload method is working correctly.
         """
-        self.file_storage1.save()
+        self.base_model1.save()
         self.assertEqual(os.path.exists(storage._FileStorage__file_path), True)
         dobj = storage.all()
         FileStorage._FileStorage__objects = {}
