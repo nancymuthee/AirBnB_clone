@@ -97,6 +97,20 @@ class TestBaseModel(unittest.TestCase):
         self.assertNotEqual(self.BaseModel1.id, basemodel3.id)
         self.assertNotEqual(self.BaseModel1.id, basemodel4.id)
 
+    def test__str__(self):
+        """Test if __str__ method returns expected string.
+        """
+        string = str(self.BaseModel1)
+        id_test = "[BaseModel] ({})".format(self.BaseModel1.id)
+        boolean = id_test in string
+        self.assertEqual(True, boolean)
+        boolean = "updated_at" in string
+        self.assertEqual(True, boolean)
+        boolean = "created_at" in string
+        self.assertEqual(True, boolean)
+        boolean = "datetime.datetime" in string
+        self.assertEqual(True, boolean)
+
 
 if __name__ == '__main__':
     unittest.main()
