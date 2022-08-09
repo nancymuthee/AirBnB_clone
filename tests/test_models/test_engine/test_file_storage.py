@@ -15,14 +15,14 @@ class TestFileStorage(unittest.TestCase):
         """Runs for each test case.
         """
         cls.base_model1 = BaseModel()
-        cls.filesorage1 = FileStorage()
+        cls.file_storage1 = FileStorage()
 
     @classmethod
     def tearDown(cls):
         """Cleans up after each test.
         """
         del cls.base_model1
-        del cls.filesorage1
+        del cls.file_storage1
 
     def test_class_exists(self):
         """Tests if class exists.
