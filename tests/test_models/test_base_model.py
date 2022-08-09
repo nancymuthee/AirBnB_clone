@@ -55,10 +55,6 @@ class TestBaseModel(unittest.TestCase):
         self.BaseModel1.save()
         self.assertNotEqual(self.BaseModel1.created_at,
                             self.BaseModel1.updated_at)
-        time1 = self.BaseModel1.updated_at
-        self.BaseModel1.save()
-        self.assertNotEqual(time1, self.BaseModel1.updated_at)
-        self.assertEqual(type(time1), datetime.datetime)
 
     def test_functions(self):
         """Test if BaseModel moudule is documented.
